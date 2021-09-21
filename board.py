@@ -33,6 +33,14 @@ class Board(pygame.Surface):
 
         self.screen.Render(obj=self,pos=(0,0))
 
-        pygame.draw.rect(self.screen.screen, black, pygame.Rect(1,1,10,10), 0)
+        (width, height) = self.screen.size
+        
+        pygame.draw.line(self.screen.screen, black, (width/5 * 2, height/5), (width/5 * 2,height/5 * 4), 5)
 
+        pygame.draw.line(self.screen.screen, black, (width/5 * 3, height/5), (width/5 * 3,height/5 * 4), 5)
+
+        pygame.draw.line(self.screen.screen, black, (width/5, height/5 * 2), (width/5 * 4,height/5 * 2), 5)
+
+        pygame.draw.line(self.screen.screen, black, (width/5, height/5 * 3), (width/5 * 4,height/5 * 3), 5)
+        
         self.screen.Render()
