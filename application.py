@@ -2,7 +2,8 @@ import sys
 import pygame
 from colors import *
 from settings import *
-
+from board import *
+from screen import *
 
 """
 
@@ -10,25 +11,26 @@ The application's main method. Contains the main game loop.
 
 """
 def main():
-    global screen, clock
+    # Initializes Pygame
     pygame.init()
-    screen = pygame.display.set_mode(size=(window_width, window_height), flags=pygame.SCALED | pygame.RESIZABLE)
-    pygame.display.set_caption('Tic-Tac-Toe')
+
+    # Sets up screen and board
+    screen = Screen()
+    board = Board(screen)
+
+    # Sets up clock
     clock = pygame.time.Clock()
-    done = False
 
-    screen.fill(black)
-
-    while not done:
+    # Main game loop
+    while True:
         clock.tick(30)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                done = True
+                pygame.quit()
+                sys.exit()
 
         pygame.display.update()
-
-    pygame.quit()
 
 """
 
