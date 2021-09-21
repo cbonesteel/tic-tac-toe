@@ -1,13 +1,14 @@
-import sys, pygame
+import sys
+import pygame
+from colors import *
+from settings import *
 
-red = (255, 0, 0)
-blue = (0, 0, 255)
-white = (255, 255, 255)
-black = (0, 0, 0)
 
-window_width = 540
-window_height = 540
+"""
 
+The application's main method. Contains the main game loop.
+
+"""
 def main():
     global screen, clock
     pygame.init()
@@ -29,5 +30,10 @@ def main():
 
     pygame.quit()
 
+"""
+
+Runs the application.
+
+"""
 if __name__ == '__main__':
     main()
