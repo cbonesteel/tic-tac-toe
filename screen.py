@@ -17,7 +17,7 @@ class Screen:
 
         pygame.display.set_caption('Tic Tac Toe')
 
-        self.screen.fill(black)
+        self.screen.fill(white)
 
     """
     
