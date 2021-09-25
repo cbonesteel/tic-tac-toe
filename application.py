@@ -4,6 +4,7 @@ from colors import *
 from settings import *
 from board import *
 from screen import *
+from mark import *
 
 """
 
@@ -17,7 +18,10 @@ def main():
     # Sets up screen and board
     screen = Screen()
     board = Board(screen)
-
+    
+    markX = Mark(screen, 0, MarkType.X)
+    markO = Mark(screen, 4, MarkType.O)
+    
     # Sets up clock
     clock = pygame.time.Clock()
 
