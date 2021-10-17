@@ -11,7 +11,7 @@ class Screen:
     """
     def __init__(self):
         self.size = (window_width, window_height)
-        self.flags = pygame.SCALED | pygame.RESIZABLE
+        self.flags = pygame.SCALED
 
         self.screen = pygame.display.set_mode(self.size, self.flags)
 
