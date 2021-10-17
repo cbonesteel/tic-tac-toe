@@ -27,16 +27,8 @@ class Mark:
         else:
             self.color = blue
 
-
-        if position < 3:
-            self.positionX = position
-            self.positionY = 0
-        elif position < 6:
-            self.positionX = position - 3
-            self.positionY = 1
-        else:
-            self.positionX = position - 6
-            self.positionY = 2
+        self.positionX = int(position % 3)
+        self.positionY = int(position / 3)
 
         self.Draw()
 
