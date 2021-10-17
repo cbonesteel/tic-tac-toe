@@ -55,5 +55,6 @@ class Mark:
             center = (centerX, centerY)
             
             pygame.draw.circle(self.screen.screen, self.color, center, width/15)
-
+            pygame.draw.circle(self.screen.screen, white, center, width/20)
+            
         self.screen.Render()
