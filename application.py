@@ -53,8 +53,8 @@ def main():
                 sys.exit()
             elif event.type == MOUSEBUTTONDOWN and currentPlayer.getType() == playerType.HUMAN:
                 x,y = pygame.mouse.get_pos()
-                x = int(x / 120) - 1
-                y = int(y / 120) - 1
+                x = int(x / (window_width / 5)) - 1
+                y = int(y / (window_width / 5)) - 1
                 pos = positions[y][x]
 
                 win = False
