@@ -87,3 +87,25 @@ class Player():
             return True
 
         return False
+
+    """
+
+    Gets the player type of the player.
+
+    Returns:
+        playerType: The type of player.
+
+    """
+    def getType(self):
+        return self.playerType
+
+    """
+
+    Returns the player's number.
+
+    Returns:
+        int: The player's number, either 1 or 2.
+
+    """
+    def getNumber(self):
+        return self.player

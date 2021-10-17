@@ -25,24 +25,54 @@ def main():
     clock = pygame.time.Clock()
 
     # Creates players
-    playerOne = Player(screen, 1, playerType.HUMAN)
-    playerTwo = Player(screen, 2, playerType.AI)
+    players = []
+    players.append(Player(screen, 1, playerType.HUMAN))
+    players.append(Player(screen, 2, playerType.HUMAN))
 
-    playerOne.placeMark(0)
-    playerTwo.placeMark(1)
+    # Turn counter
+    turns = 0
+
+    # Keeps track of used positions
+    usedPositions = []
+
+    positions = [
+        [0,1,2],
+        [3,4,5],
+        [6,7,8],
+        ]
     
     # Main game loop
     while True:
         clock.tick(30)
 
+        currentPlayer = players[turns%2]
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == MOUSEBUTTONDOWN:
-                print(pygame.mouse.get_pressed(num_buttons=3))
-                # TODO: Make player place mark based on who's playing
-                
+            elif event.type == MOUSEBUTTONDOWN and currentPlayer.getType() == playerType.HUMAN:
+                x,y = pygame.mouse.get_pos()
+                x = int(x / 120) - 1
+                y = int(y / 120) - 1
+                pos = positions[y][x]
+
+                win = False
+                invalidMove = False
+
+                for i in range(len(usedPositions)):
+                    if usedPositions[i] == pos:
+                        print("Position in use.")
+                        invalidMove = True
+
+                if invalidMove == False:
+                    win = currentPlayer.placeMark(pos)
+                    usedPositions.append(pos)
+                    turns += 1
+
+                if win == True:
+                    print(f'Player {currentPlayer.getNumber():1} wins!')
+
         pygame.display.update()
 
 """
