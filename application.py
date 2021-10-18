@@ -52,13 +52,22 @@ def main():
                 pygame.quit()
                 sys.exit()
             elif event.type == MOUSEBUTTONDOWN and currentPlayer.getType() == playerType.HUMAN:
-                x,y = pygame.mouse.get_pos()
-                x = int(x / (window_width / 5)) - 1
-                y = int(y / (window_width / 5)) - 1
-                pos = positions[y][x]
-
                 win = False
                 invalidMove = False
+                pos = -1
+                
+                blockX = window_width / 5
+                blockY = window_height / 5
+                
+                x,y = pygame.mouse.get_pos()
+                
+                if x < blockX or x > window_width - blockX or y < blockY or y > window_height - blockY:
+                    print ("Not a square")
+                    invalidMove = True
+                else:
+                    x = int(x / (blockX)) - 1
+                    y = int(y / (blockY)) - 1
+                    pos = positions[y][x]
 
                 for i in range(len(usedPositions)):
                     if usedPositions[i] == pos:
