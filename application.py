@@ -46,7 +46,7 @@ def main():
 
     button_multiplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3 
     + window_width / 3 * .375, window_width / 3, window_width / 3 / 4), text='Player v. Player', manager=manager)
-    
+
     button_exit = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3 
     + window_width / 3 * .375 * 2, window_width / 3, window_width / 3 / 4), text='Exit', manager=manager)
 
@@ -82,13 +82,19 @@ def main():
                 manager.draw_ui(window_surface)
                 
             if game_active == True:    
+                # Builds the board
                 if game_init == False:
                     board = Board(screen)
                     game_init = True
+
+                # Handles Turns for Humans
                 currentPlayer = players[turns%2]
+                win = False
+                invalidMove = False
+
+                print(f"Current Player Type = {currentPlayer.playerType:5}")
+
                 if event.type == MOUSEBUTTONDOWN and currentPlayer.playerType == playerType.HUMAN:
-                    win = False
-                    invalidMove = False
                     pos = -1
                     
                     blockX = window_width / 5
@@ -114,11 +120,19 @@ def main():
                         usedPositions.append(pos)
                         turns += 1
 
-                    if win == True:
-                        print(f'Player {currentPlayer.player:1} wins!')
-                    elif len(usedPositions) == 9:
-                        print('Draw')
+                # Handles AI
+                if currentPlayer.playerType == playerType.AI:
                     
+                    pos = currentPlayer.AIMakeMove(usedPositions)
+                    win = currentPlayer.checkWin()
+                    usedPositions.append(pos)
+                    turns += 1
+
+                if win == True:
+                    print(f'Player {currentPlayer.player:1} wins!')
+                elif len(usedPositions) == 9:
+                    print('Draw')
+
         pygame.display.update()
 
 """
