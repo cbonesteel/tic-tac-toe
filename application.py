@@ -21,7 +21,7 @@ def main():
     
     # Sets up screen and board
     screen = Screen()
-    window_surface = screen.getScreen()
+    window_surface = screen.screen
     
     # Sets up clock
     clock = pygame.time.Clock()
@@ -82,7 +82,7 @@ def main():
                     board = Board(screen)
                     game_init = True
                 currentPlayer = players[turns%2]
-                if event.type == MOUSEBUTTONDOWN and currentPlayer.getType() == playerType.HUMAN:
+                if event.type == MOUSEBUTTONDOWN and currentPlayer.playerType == playerType.HUMAN:
                     win = False
                     invalidMove = False
                     pos = -1
@@ -111,7 +111,7 @@ def main():
                         turns += 1
 
                     if win == True:
-                        print(f'Player {currentPlayer.getNumber():1} wins!')
+                        print(f'Player {currentPlayer.player:1} wins!')
                     elif len(usedPositions) == 9:
                         print('Draw')
                     

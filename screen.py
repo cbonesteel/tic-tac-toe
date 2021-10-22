@@ -34,14 +34,3 @@ class Screen:
             pygame.display.update()
         else:
             pygame.display.update()
-
-    """
-
-    Returns the screen element. Used for pygame_gui.
-
-    Return:
-        screen: A pygame.screen
-
-    """
-    def getScreen(self):
-        return self.screen
