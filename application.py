@@ -41,10 +41,14 @@ def main():
         [6,7,8],
         ]
 
-    # TODO: Make these scalable based on window size
-    button_singleplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(200, 200, 200, 50), text='Player v. CPU', manager=manager)
-    button_multiplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(200, 275, 200, 50), text='Player v. Player', manager=manager)
-    button_exit = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(200, 350, 200, 50), text='Exit', manager=manager)
+    button_singleplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3,
+     window_width / 3, window_width / 3 / 4), text='Player v. CPU', manager=manager)
+
+    button_multiplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3 
+    + window_width / 3 * .375, window_width / 3, window_width / 3 / 4), text='Player v. Player', manager=manager)
+    
+    button_exit = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3 
+    + window_width / 3 * .375 * 2, window_width / 3, window_width / 3 / 4), text='Exit', manager=manager)
 
     game_active = False
     game_init = False
