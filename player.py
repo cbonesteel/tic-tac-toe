@@ -1,6 +1,8 @@
 import pygame
+from pygame import cursors
 from pygame.draw import circle
 from pygame.locals import *
+from pygame.surfarray import array2d
 from mark import *
 from enum import Enum
 
@@ -46,8 +48,8 @@ class Player():
 
     """
     def placeMark(self, position):
-        x = int(position % 3)
-        y = int(position / 3)
+        x = int(position / 3)
+        y = int(position % 3)
 
         self.moves[x][y] = 1
 
@@ -104,13 +106,19 @@ class Player():
         [3,4,5],
         [6,7,8],
         ]
+
+        currentBoard = []
         # Creates an array to analyze based on the current board state
-        currentBoard = self.moves
+        for i in range(3):
+            currentBoard.append([])
+            for j in range(3):
+                currentBoard[i].append(self.moves[i][j])
+        
         # Adds other player's positons
         for i in range(len(usedPositions)):
-            x = int(usedPositions[i] % 3)
-            y = int(usedPositions[i] / 3)
-            if currentBoard[x][y] != 1:
+            x = int(usedPositions[i] / 3)
+            y = int(usedPositions[i] % 3)
+            if currentBoard[x][y] == 0:
                 currentBoard[x][y] = 2
         
         movePlayed = False
@@ -193,9 +201,9 @@ class Player():
         for i in range(3):
             for j in range(3):
                 if currentBoard[i][j] == 0:
-                    self.moves[i][j] == 1
+                    self.moves[i][j] = 1
                     win = self.checkWin()
-                    self.moves[i][j] == 0
+                    self.moves[i][j] = 0
                 if win == True:
                     self.placeMark(positions[i][j])
                     print("Won")
@@ -221,9 +229,9 @@ class Player():
         for i in range(3):
             for j in range(3):
                 if currentBoard[i][j] == 0:
-                    currentBoard[i][j] == 2
+                    currentBoard[i][j] = 2
                     win = self.checkOpWin(currentBoard)
-                    currentBoard[i][j] == 0
+                    currentBoard[i][j] = 0
                 if win == True:
                     self.placeMark(positions[i][j])
                     print("Block Win")
