@@ -125,11 +125,6 @@ def main():
                     elif len(usedPositions) == 9:
                         print('Draw')
 
-                    if win == True:
-                        print(f'Player {currentPlayer.player:1} wins!')
-                    elif len(usedPositions) == 9:
-                        print('Draw')
-
                     pygame.event.post(pygame.event.Event(STARTAI, {}))
 
                 # Handles AI
