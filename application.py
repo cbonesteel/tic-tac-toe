@@ -8,6 +8,7 @@ from board import *
 from screen import *
 from mark import *
 from player import *
+from events import *
 
 """
 
@@ -92,8 +93,6 @@ def main():
                 win = False
                 invalidMove = False
 
-                print(f"Current Player Type = {currentPlayer.playerType:5}")
-
                 if event.type == MOUSEBUTTONDOWN and currentPlayer.playerType == playerType.HUMAN:
                     pos = -1
                     
@@ -120,18 +119,26 @@ def main():
                         usedPositions.append(pos)
                         turns += 1
 
+                    if win == True:
+                        print(f'Player {currentPlayer.player:1} wins!')
+                    elif len(usedPositions) == 9:
+                        print('Draw')
+
+                    pygame.event.post(pygame.event.Event(STARTAI, {}))
+
                 # Handles AI
-                if currentPlayer.playerType == playerType.AI:
-                    
+                if event.type == STARTAI and currentPlayer.playerType == playerType.AI:
                     pos = currentPlayer.AIMakeMove(usedPositions)
                     win = currentPlayer.checkWin()
                     usedPositions.append(pos)
                     turns += 1
 
-                if win == True:
-                    print(f'Player {currentPlayer.player:1} wins!')
-                elif len(usedPositions) == 9:
-                    print('Draw')
+                    if win == True:
+                        print(f'Player {currentPlayer.player:1} wins!')
+                    elif len(usedPositions) == 9:
+                        print('Draw')
+
+                
 
         pygame.display.update()
 
