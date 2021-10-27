@@ -128,11 +128,9 @@ class Player():
             elif i == 1:
                 movePlayed, pos = self.canBlock(currentBoard, positions)
             elif i == 2:
-                movePlayed = False
-                # movePlayed, pos = self.canFork(currentBoard, positions)
+                movePlayed, pos = self.canFork(currentBoard, positions)
             elif i == 3:
-                movePlayed = False
-                # movePlayed, pos = self.blockFork(currentBoard, positions)
+                movePlayed, pos = self.blockFork(currentBoard, positions)
             elif i == 4:
                 movePlayed, pos = self.playCenter(currentBoard, positions)
             elif i == 5:
@@ -183,6 +181,102 @@ class Player():
 
         return False
 
+    """
+
+    Counts the number of wins currently possible on the board for the opponent.
+
+    Parameters:
+        currentBoard: The current board to be checked.
+
+    Returns:
+        Int: The current number of possible wins for the opponent on the board.
+
+    """
+    def countOpWins(self, currentBoard):
+        wins = 0
+        for i in range(3):
+            sum = 0
+            blocked = False
+            for j in range(3):
+                if currentBoard[i][j] == 1:
+                    blocked = True
+                else:
+                    sum += currentBoard[i][j]
+                
+            if sum == 4 and not blocked:
+                wins += 1
+
+
+        for i in range(3):
+            sum = 0
+            blocked = False
+            for j in range(3):
+                if currentBoard[j][i] == 1:
+                    blocked = True
+                else:
+                    sum += currentBoard[j][i]
+                
+            if sum == 4 and not blocked:
+                wins += 1
+
+        sum = currentBoard[0][0] + currentBoard[1][1] + currentBoard[2][2]
+        if sum == 4 and currentBoard[0][0] != 1 and currentBoard[1][1] != 1 and currentBoard[2][2] != 1:
+            wins += 1
+
+        sum = currentBoard[0][2] + currentBoard[1][1] + currentBoard[2][0]
+        if sum == 4 and currentBoard[0][2] != 1 and currentBoard[1][1] != 1 and currentBoard[2][0] != 1:
+            wins += 1
+
+        return wins
+
+    """
+
+    Counts the number of wins currently possible on the board.
+
+    Parameters:
+        currentBoard: The current board to be checked.
+
+    Returns:
+        Int: The current number of possible wins on the board.
+
+    """
+    def countWins(self, currentBoard):
+        wins = 0
+        for i in range(3):
+            sum = 0
+            blocked = False
+            for j in range(3):
+                if currentBoard[i][j] == 2:
+                    blocked = True
+                else:
+                    sum += self.moves[i][j]
+                
+            if sum == 2 and not blocked:
+                wins += 1
+
+
+        for i in range(3):
+            sum = 0
+            blocked = False
+            for j in range(3):
+                if currentBoard[j][i] == 2:
+                    blocked = True
+                else:
+                    sum += self.moves[j][i]
+                
+            if sum == 2 and not blocked:
+                wins += 1
+
+        sum = self.moves[0][0] + self.moves[1][1] + self.moves[2][2]
+        if sum == 2 and currentBoard[0][0] != 2 and currentBoard[1][1] != 2 and currentBoard[2][2] != 2:
+            wins += 1
+
+        sum = self.moves[0][2] + self.moves[1][1] + self.moves[2][0]
+        if sum == 2 and currentBoard[0][2] != 2 and currentBoard[1][1] != 2 and currentBoard[2][0] != 2:
+            wins += 1
+
+        return wins
+        
     """
 
     Checks if there is a postion that will lead to a win.
@@ -253,7 +347,53 @@ class Player():
 
     """
     def canFork(self, currentBoard, positions):
-        return False, -1
+        turn = 0
+        winsPossible = 0
+        played = False
+        for i in range(3):
+            for j in range(3):
+                turn += self.moves[i][j]
+
+        if turn == 0 and self.player == 1:
+            print("Forked")
+            return self.playCorner(currentBoard, positions)
+        elif turn == 0:
+            print("Forked")
+            played, position = self.playCenter(currentBoard, positions)
+            if played == True:
+                return played, position
+            else:
+                return self.playCorner(currentBoard, positions)
+
+        
+        if turn == 1 and self.player == 1:
+            if currentBoard[2][2] == 0:
+                self.placeMark(positions[2][2])
+                print("Forked")
+                return True, positions[2][2]
+            elif currentBoard[0][2] == 0:
+                self.placeMark(positions[0][2])
+                print("Forked")
+                return True, positions[0][2]
+            elif currentBoard[2][0] == 0:
+                self.placeMark(positions[2][0]) 
+                print("Forked")
+                return True, positions[2][0]
+        elif turn == 1:
+            print("DO SOMETHING")
+        
+        for i in range(3):
+            for j in range(3):
+                if currentBoard[i][j] == 0:
+                    self.moves[i][j] = 1
+                    winsPossible = self.countWins(currentBoard)
+                    self.moves[i][j] = 0
+                if winsPossible >= 2:
+                    self.placeMark(positions[i][j])
+                    print("Forked")
+                    return True, positions[i][j]
+
+        return False, -1  
 
     """
 
@@ -269,6 +409,23 @@ class Player():
 
     """
     def blockFork(self, currentBoard, positions):
+        winsPossible = 0
+        for i in range(3):
+            for j in range(3):
+                if currentBoard[i][j] == 0:
+                    currentBoard[i][j] = 2
+                    for k in range(3):
+                        for l in range(3):
+                            if currentBoard[k][l] == 0:
+                                currentBoard[k][l] = 2
+                                winsPossible = self.countOpWins(currentBoard)
+                                currentBoard[k][l] = 0
+                    currentBoard[i][j] = 0
+                    if winsPossible >= 2:
+                        self.placeMark(positions[i][j])
+                        print("Blocked Fork")
+                        return True, positions[i][j]
+
         return False, -1
 
     """
