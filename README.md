@@ -27,3 +27,12 @@ difference between perfect players.)
 opposite corner.
 7. Empty corner: The player plays in a corner square.
 8. Empty side: The player plays in a middle square on any of the four sides.
+
+### TODO
+- [ ] Add Title
+- [ ] Add Menu Background
+- [ ] Add X and O selection to Singleplayer
+- [ ] Raise Win and Draw Events
+- [ ] Display Win and Draw Popups with Menu and Play Again Options
+- [ ] Make some way to go back to menu in game
+- [ ] Polish
