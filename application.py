@@ -81,6 +81,13 @@ def main():
                 manager.process_events(event)
                 manager.update(time_delta)
                 manager.draw_ui(window_surface)
+
+            if event.type == PLAYER_ONE_WINS:
+                print("Player One Wins")
+            elif event.type == PLAYER_TWO_WINS:
+                print("Player Two Wins")
+            elif event.type == DRAW:
+                print("Draw")
                 
             if game_active == True:    
                 # Builds the board
@@ -92,7 +99,6 @@ def main():
                 currentPlayer = players[turns%2]
                 win = False
                 invalidMove = False
-
                 if event.type == MOUSEBUTTONDOWN and currentPlayer.playerType == playerType.HUMAN:
                     pos = -1
                     
@@ -121,9 +127,12 @@ def main():
                         pygame.event.post(pygame.event.Event(STARTAI, {}))
 
                     if win == True:
-                        print(f'Player {currentPlayer.player:1} wins!')
+                        if currentPlayer.player == 1:
+                            pygame.event.post(pygame.event.Event(PLAYER_ONE_WINS, {}))
+                        else:
+                            pygame.event.post(pygame.event.Event(PLAYER_TWO_WINS, {}))
                     elif len(usedPositions) == 9:
-                        print('Draw')
+                        pygame.event.post(pygame.event.Event(DRAW, {}))
 
                 # Handles AI
                 if event.type == STARTAI and currentPlayer.playerType == playerType.AI:
@@ -133,11 +142,12 @@ def main():
                     turns += 1
 
                     if win == True:
-                        print(f'Player {currentPlayer.player:1} wins!')
+                        if currentPlayer.player == 1:
+                            pygame.event.post(pygame.event.Event(PLAYER_ONE_WINS, {}))
+                        else:
+                            pygame.event.post(pygame.event.Event(PLAYER_TWO_WINS, {}))
                     elif len(usedPositions) == 9:
-                        print('Draw')
-
-                
+                        pygame.event.post(pygame.event.Event(DRAW, {}))                
 
         pygame.display.update()
 
