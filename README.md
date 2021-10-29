@@ -32,7 +32,7 @@ opposite corner.
 - [ ] Add Title
 - [ ] Add Menu Background
 - [ ] Add X and O selection to Singleplayer
-- [ ] Raise Win and Draw Events
+- [X] Raise Win and Draw Events
 - [ ] Display Win and Draw Popups with Menu and Play Again Options
 - [ ] Make some way to go back to menu in game
 - [ ] Polish
