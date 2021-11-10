@@ -18,9 +18,9 @@ The application's main method. Contains the main game loop.
 def main():
     # Initializes Pygame
     pygame.init()
-    manager = pygame_gui.UIManager((window_width, window_height))
     
     # Sets up screen and board
+    board_screen = Screen()
     screen = Screen()
     window_surface = screen.screen
     
@@ -42,20 +42,35 @@ def main():
         [6,7,8],
         ]
 
-    button_singleplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3,
-     window_width / 3, window_width / 3 / 4), text='Player v. CPU', manager=manager)
+    main_manager = pygame_gui.UIManager((window_width, window_height))
+    pause_manager = pygame_gui.UIManager((window_width, window_height))
 
-    button_multiplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3 
-    + window_width / 3 * .375, window_width / 3, window_width / 3 / 4), text='Player v. Player', manager=manager)
+    # Main Menu
+    button_singleplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, 
+    window_width / 3, window_width / 3, window_width / 3 / 4), text='Player v. CPU', manager=main_manager)
+
+    button_multiplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, 
+    window_width / 3  + window_width / 3 * .375, window_width / 3, window_width / 3 / 4), text='Player v. Player', manager=main_manager)
 
     button_exit = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3 
-    + window_width / 3 * .375 * 2, window_width / 3, window_width / 3 / 4), text='Exit', manager=manager)
+    + window_width / 3 * .375 * 2, window_width / 3, window_width / 3 / 4), text='Exit', manager=main_manager)
 
     title = pygame_gui.elements.UIImage(relative_rect=pygame.Rect(window_width / 6 / 2, window_height / 6 / 4, 
-    window_width / 1.2, window_height / 6), image_surface=pygame.image.load("resources/title.png"), manager=manager)
+    window_width / 1.2, window_height / 6), image_surface=pygame.image.load("resources/title.png"), manager=main_manager)
+
+    # Pause Menu
+    paused_title = pygame_gui.elements.UIImage(relative_rect=pygame.Rect(window_width / 6 * 1.5, window_width / 6 * 1.5,
+    window_width / 2, window_width / 6), image_surface=pygame.image.load("resources/paused.png"), manager=pause_manager)
+
+    button_resume = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3
+    + window_width / 3 * .375, window_width / 3, window_width / 3 / 4), text='Resume', manager=pause_manager)
+
+    button_quit = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3 
+    + window_width / 3 * .375 * 2, window_width / 3, window_width / 3 / 4), text='Return to Menu', manager=pause_manager)
 
     game_active = False
     game_init = False
+    paused = False
     
     # Main game loop
     while True:
@@ -66,25 +81,25 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-            if game_active == False:
+            if not game_active:
                 screen.screen.blit(screen.background, (0,0))            
                 if event.type == pygame.USEREVENT:
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == button_singleplayer:
-                            players.append(Player(screen, 1, playerType.HUMAN))
-                            players.append(Player(screen, 2, playerType.AI))
+                            players.append(Player(board_screen, 1, playerType.HUMAN))
+                            players.append(Player(board_screen, 2, playerType.AI))
                             game_active = True
                         elif event.ui_element == button_multiplayer:
-                            players.append(Player(screen, 1, playerType.HUMAN))
-                            players.append(Player(screen, 2, playerType.HUMAN))
+                            players.append(Player(board_screen, 1, playerType.HUMAN))
+                            players.append(Player(board_screen, 2, playerType.HUMAN))
                             game_active = True
                         elif event.ui_element == button_exit:
                             pygame.quit()
                             sys.exit()
                     
-                manager.process_events(event)
-                manager.update(time_delta)
-                manager.draw_ui(window_surface)
+                main_manager.process_events(event)
+                main_manager.update(time_delta)
+                main_manager.draw_ui(window_surface)
 
             if event.type == PLAYER_ONE_WINS:
                 print("Player One Wins")
@@ -93,17 +108,28 @@ def main():
             elif event.type == DRAW:
                 print("Draw")
                 
-            if game_active == True:    
+            if game_active and not paused:    
                 # Builds the board
                 if game_init == False:
-                    screen.screen.fill(white)
-                    board = Board(screen)
+                    board = Board(board_screen)
                     game_init = True
 
                 # Handles Turns for Humans
                 currentPlayer = players[turns%2]
                 win = False
                 invalidMove = False
+                if event.type == pygame.KEYDOWN:
+                        print("key pressed")
+                        if event.key == K_ESCAPE:
+                            paused = True
+
+                if event.type == UNPAUSED:
+                    board.DrawBoard()
+                    for mark in players[0].marks:
+                        mark.Draw()
+                    for mark in players[1].marks:
+                        mark.Draw()
+                
                 if event.type == MOUSEBUTTONDOWN and currentPlayer.playerType == playerType.HUMAN:
                     pos = -1
                     
@@ -152,7 +178,25 @@ def main():
                         else:
                             pygame.event.post(pygame.event.Event(PLAYER_TWO_WINS, {}))
                     elif len(usedPositions) == 9:
-                        pygame.event.post(pygame.event.Event(DRAW, {}))                
+                        pygame.event.post(pygame.event.Event(DRAW, {}))   
+
+            if paused and game_active:
+                if event.type == pygame.USEREVENT:
+                    if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                        if event.ui_element == button_resume:
+                            paused = False
+                            pygame.event.post(pygame.event.Event(UNPAUSED, {}))
+                        elif event.ui_element == button_quit:
+                            game_active = False
+                            game_init = False
+                            paused = False
+                            players = []
+                            turns = 0
+                            usedPositions = []
+
+                pause_manager.process_events(event)
+                pause_manager.update(time_delta)
+                pause_manager.draw_ui(window_surface)      
 
         pygame.display.update()
 

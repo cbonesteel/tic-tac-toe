@@ -29,8 +29,8 @@ class Board(pygame.Surface):
 
     """
     def DrawBoard(self):
-        self.fill(self.color)
-
+        self.screen.screen.fill(self.color)
+        
         self.screen.Render(obj=self,pos=(0,0))
 
         (width, height) = self.screen.size

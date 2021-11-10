@@ -30,6 +30,7 @@ class Player():
         self.player = player
         self.playerType = playerType
         self.screen = screen
+        self.marks = []
         
         if player == 1:
             self.markType = MarkType.X
@@ -54,6 +55,8 @@ class Player():
         self.moves[x][y] = 1
 
         newMark = Mark(self.screen, position, self.markType) 
+        
+        self.marks.append(newMark)
         
         return self.checkWin()
     
