@@ -29,7 +29,7 @@ opposite corner.
 8. Empty side: The player plays in a middle square on any of the four sides.
 
 ### TODO
-- [ ] Add Title
+- [X] Add Title
 - [ ] Add Menu Background
 - [ ] Add X and O selection to Singleplayer
 - [X] Raise Win and Draw Events
