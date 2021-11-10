@@ -2,6 +2,7 @@ import sys
 import pygame
 import pygame_gui
 from pygame.locals import *
+from pygame_gui.core import ui_element
 from colors import *
 from settings import *
 from board import *
@@ -14,6 +15,13 @@ class GameType(Enum):
     EMPTY = 0
     SINGLEPLAYER = 1
     MULTIPLAYER = 2
+
+class MenuState(Enum):
+    MAIN = 0
+    SELECTION = 1
+    PAUSE = 2
+    END_GAME = 3
+    NONE = 4
 
 """
 
@@ -50,6 +58,7 @@ def main():
     main_manager = pygame_gui.UIManager((window_width, window_height))
     pause_manager = pygame_gui.UIManager((window_width, window_height))
     win_manager = pygame_gui.UIManager((window_width, window_height))
+    selection_manager = pygame_gui.UIManager((window_width, window_height))
 
     # Main Menu
     button_singleplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, 
@@ -63,6 +72,13 @@ def main():
 
     title = pygame_gui.elements.UIImage(relative_rect=pygame.Rect(window_width / 6 / 2, window_height / 6 / 4, 
     window_width / 1.2, window_height / 6), image_surface=pygame.image.load("resources/title.png"), manager=main_manager)
+
+    # Selection Screen
+    button_x = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, 
+    window_width / 3, window_width / 3, window_width / 3 / 4), text='X', manager=selection_manager)
+
+    button_o = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, 
+    window_width / 3  + window_width / 3 * .375, window_width / 3, window_width / 3 / 4), text='O', manager=selection_manager)
 
     # Pause Menu
     paused_title = pygame_gui.elements.UIImage(relative_rect=pygame.Rect(window_width / 6 * 1.5, window_width / 6 * 1.5,
@@ -85,11 +101,9 @@ def main():
     button_result_quit = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3 
     + window_width / 3 * .375 * 2, window_width / 3, window_width / 3 / 4), text='Return to Menu', manager=win_manager)
 
-    game_active = False
     game_init = False
-    paused = False
-    done = False
     game_type = GameType.EMPTY
+    menu_state = MenuState.MAIN
     
     # Main game loop
     while True:
@@ -100,20 +114,35 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-            if not game_active and not done:
+            if event.type == MAIN_MENU:
+                menu_state = MenuState.MAIN
+                game_type = GameType.EMPTY
+            if event.type == SELECTION_MENU:
+                menu_state = MenuState.SELECTION
+            if event.type == ACTIVATE_GAME:
+                menu_state = MenuState.NONE
+            if event.type == PAUSE_MENU:
+                menu_state = MenuState.PAUSE
+            if event.type == END_GAME_MENU:
+                game_init = False
+                players = []
+                turns = 0
+                usedPositions = []
+                menu_state = MenuState.END_GAME
+
+            #--- MAIN MENU ---#
+            if menu_state == MenuState.MAIN:
                 screen.screen.blit(screen.background, (0,0))            
                 if event.type == pygame.USEREVENT:
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == button_singleplayer:
-                            players.append(Player(board_screen, 1, playerType.HUMAN))
-                            players.append(Player(board_screen, 2, playerType.AI))
                             game_type = GameType.SINGLEPLAYER
-                            game_active = True
+                            pygame.event.post(pygame.event.Event(SELECTION_MENU, {}))
                         elif event.ui_element == button_multiplayer:
                             players.append(Player(board_screen, 1, playerType.HUMAN))
                             players.append(Player(board_screen, 2, playerType.HUMAN))
                             game_type = GameType.MULTIPLAYER
-                            game_active = True
+                            pygame.event.post(pygame.event.Event(ACTIVATE_GAME, {}))
                         elif event.ui_element == button_exit:
                             pygame.quit()
                             sys.exit()
@@ -122,54 +151,59 @@ def main():
                 main_manager.update(time_delta)
                 main_manager.draw_ui(window_surface)
 
-            if event.type == PLAYER_ONE_WINS:
-                game_active = False
-                done = True
-                game_init = False
-                paused = False
-                players = []
-                turns = 0
-                usedPositions = []
-                screen.screen.blit(p1_win, (window_width / 6 / 2, window_height / 6 / 4))
-            elif event.type == PLAYER_TWO_WINS:
-                game_active = False
-                done = True
-                game_init = False
-                paused = False
-                players = []
-                turns = 0
-                usedPositions = []
-                screen.screen.blit(p2_win, (window_width / 6 / 2, window_height / 6 / 4))
-            elif event.type == DRAW:
-                game_active = False
-                done = True
-                game_init = False
-                paused = False
-                players = []
-                turns = 0
-                usedPositions = []
-                screen.screen.blit(game_draw, (window_width / 6 / 2, window_height / 6 / 4))
+            #--- SINGLEPLAYER MENU ---#
+            if menu_state == MenuState.SELECTION:
+                screen.screen.fill(white)
+                if event.type == pygame.USEREVENT:
+                    if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                        if event.ui_element == button_x:
+                            players.append(Player(board_screen, 1, playerType.HUMAN))
+                            players.append(Player(board_screen, 2, playerType.AI))
+                            pygame.event.post(pygame.event.Event(ACTIVATE_GAME, {}))
+                        elif event.ui_element == button_o:
+                            players.append(Player(board_screen, 1, playerType.AI))
+                            players.append(Player(board_screen, 2, playerType.HUMAN))
+                            pygame.event.post(pygame.event.Event(ACTIVATE_GAME, {}))
+                            pygame.event.post(pygame.event.Event(STARTAI, {}))
 
-            if not game_active and done:
+                
+                selection_manager.process_events(event)
+                selection_manager.update(time_delta)
+                selection_manager.draw_ui(window_surface)
+
+            #--- END GAME EVENT HANDLERS ---#
+            if event.type == PLAYER_ONE_WINS:
+                screen.screen.blit(p1_win, (window_width / 6 / 2, window_height / 6 / 4))
+                pygame.event.post(pygame.event.Event(END_GAME_MENU, {}))
+            if event.type == PLAYER_TWO_WINS:
+                screen.screen.blit(p2_win, (window_width / 6 / 2, window_height / 6 / 4))
+                pygame.event.post(pygame.event.Event(END_GAME_MENU, {}))
+            if event.type == DRAW:
+                screen.screen.blit(game_draw, (window_width / 6 / 2, window_height / 6 / 4))
+                pygame.event.post(pygame.event.Event(END_GAME_MENU, {}))
+
+            #--- END GAME MENU ---#
+            if menu_state == MenuState.END_GAME:
                 if event.type == pygame.USEREVENT:
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == button_again:
-                            done = False
-                            game_active = True
                             if game_type == GameType.SINGLEPLAYER:
                                 players.append(Player(board_screen, 1, playerType.HUMAN))
                                 players.append(Player(board_screen, 2, playerType.AI))
+                                pygame.event.post(pygame.event.Event(ACTIVATE_GAME, {}))
                             elif game_type == GameType.MULTIPLAYER:
                                 players.append(Player(board_screen, 1, playerType.HUMAN))
                                 players.append(Player(board_screen, 2, playerType.HUMAN))
+                                pygame.event.post(pygame.event.Event(ACTIVATE_GAME, {}))
                         elif event.ui_element == button_result_quit:
-                            done = False
+                            pygame.event.post(pygame.event.Event(MAIN_MENU, {}))
 
                 win_manager.process_events(event)
                 win_manager.update(time_delta)
                 win_manager.draw_ui(window_surface)  
-                
-            if game_active and not paused:    
+            
+            #--- GAME ACTIVE ---#
+            if menu_state == MenuState.NONE:    
                 # Builds the board
                 if game_init == False:
                     board = Board(board_screen)
@@ -182,7 +216,7 @@ def main():
                 if event.type == pygame.KEYDOWN:
                         print("key pressed")
                         if event.key == K_ESCAPE:
-                            paused = True
+                            pygame.event.post(pygame.event.Event(PAUSE_MENU, {}))
 
                 if event.type == UNPAUSED:
                     board.DrawBoard()
@@ -241,20 +275,18 @@ def main():
                     elif len(usedPositions) == 9:
                         pygame.event.post(pygame.event.Event(DRAW, {}))   
 
-            if paused and game_active:
+            #--- PAUSE MENU ---#
+            if menu_state == MenuState.PAUSE:
                 if event.type == pygame.USEREVENT:
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == button_resume:
-                            paused = False
                             pygame.event.post(pygame.event.Event(UNPAUSED, {}))
                         elif event.ui_element == button_quit:
-                            game_active = False
                             game_init = False
-                            paused = False
-                            done = False
                             players = []
                             turns = 0
                             usedPositions = []
+                            game_type = GameType.EMPTY
 
                 pause_manager.process_events(event)
                 pause_manager.update(time_delta)
