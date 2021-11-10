@@ -103,7 +103,6 @@ class Player():
     
     """
     def AIMakeMove(self, usedPositions):
-        print("Make Move Called")
         positions = [
         [0,1,2],
         [3,4,5],
@@ -303,7 +302,6 @@ class Player():
                     self.moves[i][j] = 0
                 if win == True:
                     self.placeMark(positions[i][j])
-                    print("Won")
                     return True, positions[i][j]
         
         return False, -1
@@ -331,7 +329,6 @@ class Player():
                     currentBoard[i][j] = 0
                 if win == True:
                     self.placeMark(positions[i][j])
-                    print("Block Win")
                     return True, positions[i][j]
         
         return False, -1
@@ -358,10 +355,8 @@ class Player():
                 turn += self.moves[i][j]
 
         if turn == 0 and self.player == 1:
-            print("Forked")
             return self.playCorner(currentBoard, positions)
         elif turn == 0:
-            print("Forked")
             played, position = self.playCenter(currentBoard, positions)
             if played == True:
                 return played, position
@@ -372,18 +367,13 @@ class Player():
         if turn == 1 and self.player == 1:
             if currentBoard[2][2] == 0:
                 self.placeMark(positions[2][2])
-                print("Forked")
                 return True, positions[2][2]
             elif currentBoard[0][2] == 0:
                 self.placeMark(positions[0][2])
-                print("Forked")
                 return True, positions[0][2]
             elif currentBoard[2][0] == 0:
                 self.placeMark(positions[2][0]) 
-                print("Forked")
                 return True, positions[2][0]
-        elif turn == 1:
-            print("DO SOMETHING")
         
         for i in range(3):
             for j in range(3):
@@ -393,7 +383,6 @@ class Player():
                     self.moves[i][j] = 0
                 if winsPossible >= 2:
                     self.placeMark(positions[i][j])
-                    print("Forked")
                     return True, positions[i][j]
 
         return False, -1  
@@ -426,7 +415,6 @@ class Player():
                     currentBoard[i][j] = 0
                     if winsPossible >= 2:
                         self.placeMark(positions[i][j])
-                        print("Blocked Fork")
                         return True, positions[i][j]
 
         return False, -1
@@ -446,7 +434,6 @@ class Player():
     def playCenter(self, currentBoard, positions):
         if currentBoard[1][1] == 0:
             self.placeMark(positions[1][1])
-            print("Center")
             return True, positions[1][1]
 
         return False, -1
@@ -467,19 +454,15 @@ class Player():
     def playOpCorner(self, currentBoard, positions):
         if currentBoard[0][0] == 2 and currentBoard[2][2] == 0:
             self.placeMark(positions[2][2])
-            print("Op Corner")
             return True, positions[2][2]
         elif currentBoard[0][2] == 2 and currentBoard[2][0] == 0:
             self.placeMark(positions[2][0])
-            print("Op Corner")
             return True, positions[2][0]
         elif currentBoard[2][0] == 2 and currentBoard[0][2] == 0:
             self.placeMark(positions[0][2])
-            print("Op Corner")
             return True, positions[0][2]
         elif currentBoard[2][2] == 2 and currentBoard[0][0] == 0:
             self.placeMark(positions[0][0])
-            print("Op Corner")
             return True, positions[0][0]
         else:
             return False, -1
@@ -499,19 +482,15 @@ class Player():
     def playCorner(self, currentBoard, positions):
         if currentBoard[0][0] == 0:
             self.placeMark(positions[0][0])
-            print("Corner")
             return True, positions[0][0]
         elif currentBoard[0][2] == 0:
             self.placeMark(positions[0][2])
-            print("Corner")
             return True, positions[0][2]
         elif currentBoard[2][0] == 0:
             self.placeMark(positions[2][0])
-            print("Corner")
             return True, positions[2][0]
         elif currentBoard[2][2] == 0:
             self.placeMark(positions[2][2])
-            print("Corner")
             return True, positions[2][2]
         else:
             return False, -1
@@ -531,19 +510,15 @@ class Player():
     def playSide(self, currentBoard, positions):
         if currentBoard[0][1] == 0:
             self.placeMark(positions[0][1])
-            print("Side")
             return True, positions[0][1]
         elif currentBoard[1][0] == 0:
             self.placeMark(positions[1][0])
-            print("Side")
             return True, positions[1][0]
         elif currentBoard[1][2] == 0:
             self.placeMark(positions[1][2])
-            print("Side")
             return True, positions[1][2]
         elif currentBoard[2][1] == 0:
             self.placeMark(positions[2][1])
-            print("Side")
             return True, positions[2][1]
         else:
             return False, -1
