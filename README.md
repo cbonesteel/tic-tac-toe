@@ -36,4 +36,4 @@ opposite corner.
 - [X] Display Win and Draw Popups with Menu and Play Again Options
 - [X] Make some way to go back to menu in game
 - [X] Redo menu transitions from manual boolean changing to events
-- [ ] Polish
+- [X] Polish
