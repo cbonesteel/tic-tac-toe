@@ -125,9 +125,12 @@ def main():
             if event.type == PAUSE_MENU:
                 menu_state = MenuState.PAUSE
             if event.type == END_GAME_MENU:
+                player1 = players[0].playerType
+                player2 = players[1].playerType
                 game_init = False
                 turns = 0
                 usedPositions = []
+                players = []
                 menu_state = MenuState.END_GAME
 
             #--- MAIN MENU ---#
@@ -197,15 +200,13 @@ def main():
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == button_again:
                             if game_type == GameType.SINGLEPLAYER:
-                                player1 = players[0].playerType
-                                player2 = players[1].playerType
-                                players = []
                                 players.append(Player(board_screen, 1, player1))
                                 players.append(Player(board_screen, 2, player2))
                                 pygame.event.post(pygame.event.Event(ACTIVATE_GAME, {}))
                                 if player1 == playerType.AI:
                                     pygame.event.post(pygame.event.Event(STARTAI, {}))
                             elif game_type == GameType.MULTIPLAYER:
+                                players = []
                                 players.append(Player(board_screen, 1, playerType.HUMAN))
                                 players.append(Player(board_screen, 2, playerType.HUMAN))
                                 pygame.event.post(pygame.event.Event(ACTIVATE_GAME, {}))
