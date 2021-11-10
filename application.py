@@ -130,7 +130,6 @@ def main():
                 game_init = False
                 turns = 0
                 usedPositions = []
-                players = []
                 menu_state = MenuState.END_GAME
 
             #--- MAIN MENU ---#
@@ -200,6 +199,7 @@ def main():
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == button_again:
                             if game_type == GameType.SINGLEPLAYER:
+                                players = []
                                 players.append(Player(board_screen, 1, player1))
                                 players.append(Player(board_screen, 2, player2))
                                 pygame.event.post(pygame.event.Event(ACTIVATE_GAME, {}))
@@ -211,6 +211,7 @@ def main():
                                 players.append(Player(board_screen, 2, playerType.HUMAN))
                                 pygame.event.post(pygame.event.Event(ACTIVATE_GAME, {}))
                         elif event.ui_element == button_result_quit:
+                            players = []
                             pygame.event.post(pygame.event.Event(MAIN_MENU, {}))
 
                 win_manager.process_events(event)
