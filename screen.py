@@ -12,12 +12,12 @@ class Screen:
     def __init__(self):
         self.size = (window_width, window_height)
         self.flags = pygame.SCALED
-
         self.screen = pygame.display.set_mode(self.size, self.flags)
+        self.background = pygame.image.load("resources/menu-background.png")
 
         pygame.display.set_caption('Tic Tac Toe')
 
-        self.screen.fill(white)
+        
 
     """
     

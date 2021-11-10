@@ -51,7 +51,7 @@ def main():
     button_exit = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, window_width / 3 
     + window_width / 3 * .375 * 2, window_width / 3, window_width / 3 / 4), text='Exit', manager=manager)
 
-    title = pygame_gui.elements.UIImage(relative_rect=pygame.Rect(window_width / 6 / 2, window_height / 6 / 2, 
+    title = pygame_gui.elements.UIImage(relative_rect=pygame.Rect(window_width / 6 / 2, window_height / 6 / 4, 
     window_width / 1.2, window_height / 6), image_surface=pygame.image.load("resources/title.png"), manager=manager)
 
     game_active = False
@@ -66,7 +66,8 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-            if game_active == False:            
+            if game_active == False:
+                screen.screen.blit(screen.background, (0,0))            
                 if event.type == pygame.USEREVENT:
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                         if event.ui_element == button_singleplayer:
@@ -95,6 +96,7 @@ def main():
             if game_active == True:    
                 # Builds the board
                 if game_init == False:
+                    screen.screen.fill(white)
                     board = Board(screen)
                     game_init = True
 
