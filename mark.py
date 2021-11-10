@@ -42,19 +42,14 @@ class Mark:
         (width, height) = self.screen.size
 
         if self.markType == MarkType.X:
-            leftX = int(width/25 * (self.positionX + 6 + (4 * self.positionX)))
-            rightX = int(width/25 * (self.positionX + 9 + (4 * self.positionX)))
-            topY = int(height/25 * (self.positionY + 6 + (4 * self.positionY)))
-            botY = int(height/25 * (self.positionY + 9 + (4 * self.positionY)))
-            
-            pygame.draw.line(self.screen.screen, self.color, (leftX, topY), (rightX, botY), 10)
-            pygame.draw.line(self.screen.screen, self.color, (leftX, botY), (rightX, topY), 10)
+            pic = pygame.image.load("resources/x.png")
+            x = int(width/25 * (self.positionX + 5 + (4 * self.positionX)))
+            y = int(height/25 * (self.positionY + 5 + (4 * self.positionY)))
+            self.screen.screen.blit(pic, (x, y))
         else:
-            centerX = int(width/10 * (self.positionX + 3 + (1 * self.positionX)))
-            centerY = int(height/10 * (self.positionY + 3 + (1 * self.positionY)))
-            center = (centerX, centerY)
-            
-            pygame.draw.circle(self.screen.screen, self.color, center, width/15)
-            pygame.draw.circle(self.screen.screen, white, center, width/20)
+            pic = pygame.image.load("resources/o.png")
+            x = int(width/25 * (self.positionX + 5 + (4 * self.positionX)))
+            y = int(height/25 * (self.positionY + 5 + (4 * self.positionY)))
+            self.screen.screen.blit(pic, (x, y))
             
         self.screen.Render()
