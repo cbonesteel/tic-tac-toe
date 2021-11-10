@@ -30,9 +30,9 @@ opposite corner.
 
 ### TODO
 - [X] Add Title
-- [ ] Add Menu Background
+- [X] Add Menu Background
 - [ ] Add X and O selection to Singleplayer
 - [X] Raise Win and Draw Events
-- [ ] Display Win and Draw Popups with Menu and Play Again Options
-- [ ] Make some way to go back to menu in game
+- [X] Display Win and Draw Popups with Menu and Play Again Options
+- [X] Make some way to go back to menu in game
 - [ ] Polish
