@@ -58,7 +58,7 @@ def main():
     main_manager = pygame_gui.UIManager((window_width, window_height))
     pause_manager = pygame_gui.UIManager((window_width, window_height))
     win_manager = pygame_gui.UIManager((window_width, window_height))
-    selection_manager = pygame_gui.UIManager((window_width, window_height), 'x.json')
+    selection_manager = pygame_gui.UIManager((window_width, window_height))
 
     # Main Menu
     button_singleplayer = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(window_width / 3, 
